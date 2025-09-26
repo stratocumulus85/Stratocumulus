@@ -842,23 +842,29 @@
             const googleAppsScriptURL = form.action;
 
 
-            // --- Theme Toggle Logic ---
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme) {
-                body.classList.add(savedTheme);
-                if (savedTheme === 'dark-mode') {
-                    themeToggleCheckbox.checked = true;
-                }
-            }
+            // --- Theme Toggle Logic (FIXED) ---
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme) {
+    body.classList.add(savedTheme); // Applies 'dark-mode' to body for custom styles
+    if (savedTheme === 'dark-mode') {
+        themeToggleCheckbox.checked = true;
+        document.documentElement.classList.add('dark'); // NEW: Apply 'dark' to HTML on load
+    }
+}
 
-            themeToggleCheckbox.addEventListener('change', () => {
-                body.classList.toggle('dark-mode');
-                if (body.classList.contains('dark-mode')) {
-                    localStorage.setItem('theme', 'dark-mode');
-                } else {
-                    localStorage.removeItem('theme');
-                }
-            });
+themeToggleCheckbox.addEventListener('change', () => {
+    // 1. Toggle custom class on the <body> (used by your custom CSS)
+    body.classList.toggle('dark-mode');
+    
+    // 2. CRITICAL FIX: Toggle 'dark' class on the <html> element (used by Tailwind)
+    if (body.classList.contains('dark-mode')) {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('theme', 'dark-mode');
+    } else {
+        document.documentElement.classList.remove('dark');
+        localStorage.removeItem('theme');
+    }
+});
 
             // --- Service Card Animation Logic ---
             const serviceCards = document.querySelectorAll('.service-card');
@@ -959,6 +965,7 @@
 </body>
 </html>
 ```eof
+
 
 
 
