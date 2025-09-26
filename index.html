@@ -934,14 +934,29 @@
                 formContainer.scrollIntoView({ behavior: 'smooth' });
             };
 
-            // Attach the handler to the success button
-            backToFormBtn.addEventListener('click', backToFormHandler);
-            
-            // NEW: Attach the handler to the error button
-            backToFormBtnError.addEventListener('click', backToFormHandler); 
+                        // Handler for returning to the form (used by both success and error)
+            const backToFormHandler = () => {
+                thankYouContainer.style.display = 'none';
+                errorContainer.style.display = 'none';
+                formContainer.style.display = 'block';
+                formContainer.scrollIntoView({ behavior: 'smooth' });
+            };
+
+            // --- Robust Event Delegation for Back Button (NEW CODE) ---
+            // This ensures the click handler works reliably even if the buttons
+            // were hidden when the page initially loaded.
+            document.body.addEventListener('click', (event) => {
+                const targetId = event.target.id;
+                // Check if the clicked element is either the success or error back button
+                if (targetId === 'back-to-form-btn' || targetId === 'back-to-form-btn-error') {
+                    backToFormHandler();
+                }
+            });
+            // ----
             
         }); // Closing DOMContentLoaded
     </script>
 </body>
 </html>
 ```eof
+
