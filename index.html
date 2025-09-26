@@ -596,7 +596,28 @@
                 transform: scale(1);
             }
         }
-        
+        /* Add this CSS for the spinner animation */
+.spinner {
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top: 3px solid #ffffff; 
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    animation: spin 1s linear infinite; 
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+/* Optional: Add basic styling for the new error container */
+.error-container {
+    background-color: #ffeaea; /* Light Red */
+    border: 1px solid #f00;
+    color: #cc0000;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+}
         .thank-you-container h2 {
             font-size: 2.5rem;
             color: var(--light-accent-blue);
@@ -647,7 +668,7 @@
 <body>
 
     <header class="navbar">
-        <img src="Stratocumulus Logo.jpg" height="50" width="50">
+        <img src="/C:/Users/User/Downloads/Stratocumulus%20Logo.jpg" height="50" width="50">
         <div class="nav-logo">
             <a href="#home">STRATOCUMULUS</a>
         </div>
@@ -668,7 +689,7 @@
     </header>
 
     <main>
-        <center><img src="Screenshot_20250501_174118.jpg" width="500" height="300"></center>
+        <center><img src="C:\Users\User\Downloads\Screenshot_20250501_174118.jpg" width="500" height="300"></center>
         <section id="home" class="hero-section">
             <h1>Architecting a conscious, inspired, and intelligent tomorrow</h1>
             <div class="cta-buttons">
@@ -732,7 +753,7 @@
         </section>
 
         <section id="client-registration" style="min-height: 50vh; padding: 4rem 2rem; text-align: center;">
-            <div class="registration-form-container" id="client-registration">
+            <div class="registration-form-container" id="form-container">
                 <h2>Customer Registration</h2>
                 <form id="registrationForm" 
                       action="https://script.google.com/macros/s/AKfycbyBL8mGo7QOobIyyM2UMV7mZVagFYw3GFmmT8_REhtzlmVDqjlaSxpwu9T5dss_9TjBUg/exec" 
@@ -771,7 +792,7 @@
                     </div>
                     <div class="form-buttons">
                         <button type="reset" class="reset-btn">Reset</button>
-                        <button type="submit" class="submit-btn" id="submitButton">Submit</button>
+                        <button type="submit" class="submit-btn" id="submitButton"><span id="buttonText">Submit</span><div id="loadingSpinner" class="spinner ml-3 hidden" style="display: none;"></div></button>
                     </div>
                 </form>                
             </div>
@@ -780,6 +801,11 @@
                 <h2>Thank You!</h2>
                 <p>Your registration has been submitted successfully. A new client ID has been created and we will be in touch with you shortly to discuss your needs.</p>
                 <button id="back-to-form-btn">Register Another Client</button>
+            </div>
+            <div id="error-container" style="display: none;" class="thank-you-container error-container">
+                <h2>Submission Failed</h2>
+                <p id="errorMessage">An unexpected error occurred. Please try again later or contact support.</p>
+                <button id="back-to-form-btn-error">Go Back to Form</button>
             </div>
         </section>
         
@@ -805,8 +831,16 @@
             const thankYouContainer = document.getElementById('thank-you-container');
             const backToFormBtn = document.getElementById('back-to-form-btn');
             const submitButton = document.getElementById('submitButton');
+            // NEW: Added spinner/text elements and error containers
+            const buttonText = document.getElementById('buttonText');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const errorContainer = document.getElementById('error-container');
+            const errorMessage = document.getElementById('errorMessage');
+            const backToFormBtnError = document.getElementById('back-to-form-btn-error');
+            
             // The URL is now taken directly from the form's action attribute
-            const googleAppsScriptURL = form.action; 
+            const googleAppsScriptURL = form.action;
+
 
             // --- Theme Toggle Logic ---
             const savedTheme = localStorage.getItem('theme');
@@ -838,7 +872,9 @@
                 
                 // Show Loading State
                 submitButton.disabled = true;
-                submitButton.textContent = 'Submitting...';
+                buttonText.textContent = 'Submitting...';
+                loadingSpinner.classList.remove('hidden');
+
 
                 const formData = new FormData(form);
                 const data = new URLSearchParams(formData);
@@ -873,29 +909,27 @@
                 } catch (error) {
                     console.error('Submission error (Network or CORS issue):', error);
                     
-                    // Display an explicit error message
+                    // Display explicit error message using the dedicated container
+                    errorMessage.textContent = 'A network error occurred while connecting to the server. Please check your network or try again later.';
+                    
                     formContainer.style.display = 'none';
-                    thankYouContainer.style.display = 'block';
-                    thankYouContainer.innerHTML = '<h2>Submission Failed</h2><p>An error occurred connecting to the server. Please check your network or try again later.</p><button id="back-to-form-btn-error">Back to Form</button>';
+                    thankYouContainer.style.display = 'none'; // Ensure success message is hidden
+                    errorContainer.style.display = 'block'; // Display dedicated error container
 
-                    // Set up event listener for the temporary error button
-                    document.getElementById('back-to-form-btn-error').addEventListener('click', () => {
-                        thankYouContainer.style.display = 'none';
-                        formContainer.style.display = 'block';
-                        thankYouContainer.innerHTML = '<h2>Thank You!</h2><p>Your registration has been submitted successfully. A new client ID has been created and we will be in touch with you shortly to discuss your needs.</p><button id="back-to-form-btn">Register Another Client</button>'; // Reset content
-                        document.getElementById('back-to-form-btn').addEventListener('click', backToFormHandler); // Re-attach standard listener
-                    });
+                    errorContainer.scrollIntoView({ behavior: 'smooth' });
                     
                 } finally {
                     // Reset button state
                     submitButton.disabled = false;
-                    submitButton.textContent = 'Submit';
+                    buttonText.textContent = 'Submit';
+                    loadingSpinner.classList.add('hidden'); // NEW: Hide the spinner
                 }
             });
-
+                    
             // Handler for the "Back to Form" button
             const backToFormHandler = () => {
                 thankYouContainer.style.display = 'none';
+                errorContainer.style.display = 'none'; // NEW: Hide the error container
                 formContainer.style.display = 'block';
                 formContainer.scrollIntoView({ behavior: 'smooth' });
             };
@@ -903,10 +937,11 @@
             // Attach the handler to the success button
             backToFormBtn.addEventListener('click', backToFormHandler);
             
-        });
+            // NEW: Attach the handler to the error button
+            backToFormBtnError.addEventListener('click', backToFormHandler); 
+            
+        }); // Closing DOMContentLoaded
     </script>
 </body>
 </html>
-
 ```eof
-
