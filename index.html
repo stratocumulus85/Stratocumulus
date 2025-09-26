@@ -668,7 +668,7 @@
 <body>
 
     <header class="navbar">
-        <img src="Stratocumulus Logo.jpg" height="50" width="50">
+        <img src="/C:/Users/User/Downloads/Stratocumulus%20Logo.jpg" height="50" width="50">
         <div class="nav-logo">
             <a href="#home">STRATOCUMULUS</a>
         </div>
@@ -689,7 +689,7 @@
     </header>
 
     <main>
-        <center><img src="Screenshot_20250501_174118.jpg" width="500" height="300"></center>
+        <center><img src="C:\Users\User\Downloads\Screenshot_20250501_174118.jpg" width="500" height="300"></center>
         <section id="home" class="hero-section">
             <h1>Architecting a conscious, inspired, and intelligent tomorrow</h1>
             <div class="cta-buttons">
@@ -842,29 +842,23 @@
             const googleAppsScriptURL = form.action;
 
 
-            // --- Theme Toggle Logic (FIXED) ---
-const savedTheme = localStorage.getItem('theme');
-if (savedTheme) {
-    body.classList.add(savedTheme); // Applies 'dark-mode' to body for custom styles
-    if (savedTheme === 'dark-mode') {
-        themeToggleCheckbox.checked = true;
-        document.documentElement.classList.add('dark'); // NEW: Apply 'dark' to HTML on load
-    }
-}
+            // --- Theme Toggle Logic ---
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                body.classList.add(savedTheme);
+                if (savedTheme === 'dark-mode') {
+                    themeToggleCheckbox.checked = true;
+                }
+            }
 
-themeToggleCheckbox.addEventListener('change', () => {
-    // 1. Toggle custom class on the <body> (used by your custom CSS)
-    body.classList.toggle('dark-mode');
-    
-    // 2. CRITICAL FIX: Toggle 'dark' class on the <html> element (used by Tailwind)
-    if (body.classList.contains('dark-mode')) {
-        document.documentElement.classList.add('dark');
-        localStorage.setItem('theme', 'dark-mode');
-    } else {
-        document.documentElement.classList.remove('dark');
-        localStorage.removeItem('theme');
-    }
-});
+            themeToggleCheckbox.addEventListener('change', () => {
+                body.classList.toggle('dark-mode');
+                if (body.classList.contains('dark-mode')) {
+                    localStorage.setItem('theme', 'dark-mode');
+                } else {
+                    localStorage.removeItem('theme');
+                }
+            });
 
             // --- Service Card Animation Logic ---
             const serviceCards = document.querySelectorAll('.service-card');
@@ -940,33 +934,17 @@ themeToggleCheckbox.addEventListener('change', () => {
                 formContainer.scrollIntoView({ behavior: 'smooth' });
             };
 
-                        // Handler for returning to the form (used by both success and error)
-            const backToFormHandler = () => {
-                thankYouContainer.style.display = 'none';
-                errorContainer.style.display = 'none';
-                formContainer.style.display = 'block';
-                formContainer.scrollIntoView({ behavior: 'smooth' });
-            };
-
-            // --- Robust Event Delegation for Back Button (NEW CODE) ---
-            // This ensures the click handler works reliably even if the buttons
-            // were hidden when the page initially loaded.
-            document.body.addEventListener('click', (event) => {
-                const targetId = event.target.id;
-                // Check if the clicked element is either the success or error back button
-                if (targetId === 'back-to-form-btn' || targetId === 'back-to-form-btn-error') {
-                    backToFormHandler();
-                }
-            });
-            // ----
+            // Attach the handler to the success button
+            backToFormBtn.addEventListener('click', backToFormHandler);
+            
+            // NEW: Attach the handler to the error button
+            backToFormBtnError.addEventListener('click', backToFormHandler); 
             
         }); // Closing DOMContentLoaded
     </script>
 </body>
 </html>
 ```eof
-
-
 
 
 
