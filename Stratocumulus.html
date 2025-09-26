@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stratocumulus</title>
+    <style>
+        /* General Body and Base Styles */
+        :root {
+            --light-bg-color: #f0f2f5;
+            --light-text-color: #1a1a1a;
+            --light-nav-bg: #ffffff;
+            --light-accent-blue: #007bff;
+            --light-accent-yellow: #ffc107;
+            --light-box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+            --dark-bg-color: #121212;
+            --dark-text-color: #f5f5f5;
+            --dark-nav-bg: #1e1e1e;
+            --dark-accent-blue: #66b2ff;
+            --dark-accent-yellow: #ffeb3b;
+            --dark-box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            transition: background-color 0.4s ease, color 0.4s ease;
+            background-color: var(--light-bg-color);
+            color: var(--light-text-color);
+        }
+
+        body.dark-mode {
+            background-color: var(--dark-bg-color);
+            color: var(--dark-text-color);
+        }
+        
+        /* Navigation Bar Styling */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            background-color: var(--light-nav-bg);
+            box-shadow: var(--light-box-shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: background-color 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        body.dark-mode .navbar {
+            background-color: var(--dark-nav-bg);
+            box-shadow: var(--dark-box-shadow);
+        }
+        
+        .nav-logo a {
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: var(--light-text-color);
+            text-decoration: none;
+        }
+
+        body.dark-mode .nav-logo a {
+            color: var(--dark-text-color);
+        }
+        
+        .nav-links {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .nav-links li {
+            margin-left: 2rem;
+        }
+        
+        .nav-links a {
+            color: var(--light-text-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        body.dark-mode .nav-links a {
+            color: var(--dark-text-color);
+        }
+        
+        .nav-links a:hover {
+            color: var(--light-accent-blue);
+        }
+
+        body.dark-mode .nav-links a:hover {
+            color: var(--dark-accent-blue);
+        }
+
+        /* Hero Section */
+        .hero-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 8rem 2rem;
+            min-height: 80vh;
+
+        }
+
+        .hero-section h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            color: black;
+            font-weight: bold;
+        }
+
+        body.dark-mode .hero-section h1 {
+            color: white;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .cta-button {
+            padding: 0.8rem 2.5rem;
+            font-size: 1rem;
+            font-weight: bold;
+            border: 2px solid var(--light-accent-blue);
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .cta-button.primary {
+            background-color: var(--light-accent-blue);
+            color: white;
+        }
+        
+        .cta-button.primary:hover {
+            background-color: transparent;
+            color: var(--light-accent-blue);
+        }
+
+        body.dark-mode .cta-button.primary {
+            background-color: var(--dark-accent-blue);
+            border-color: var(--dark-accent-blue);
+            color: black;
+        }
+
+        body.dark-mode .cta-button.primary:hover {
+            background-color: transparent;
+            color: var(--dark-accent-blue);
+        }
+        
+        .cta-button.secondary {
+            background-color: transparent;
+            color: var(--light-accent-blue);
+        }
+        
+        .cta-button.secondary:hover {
+            background-color: var(--light-accent-blue);
+            color: white;
+        }
+
+        body.dark-mode .cta-button.secondary {
+            color: var(--dark-accent-blue);
+            border-color: var(--dark-accent-blue);
+        }
+
+        body.dark-mode .cta-button.secondary:hover {
+            background-color: var(--dark-accent-blue);
+            color: black;
+        }
+
+        /* Contact & Social Media Section */
+        .contact-section {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .contact-section p {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            list-style: none;
+            padding: 0;
+        }
+
+        .social-links a {
+            color: var(--light-text-color);
+            font-size: 1.5rem;
+            transition: color 0.3s ease;
+        }
+
+        body.dark-mode .social-links a {
+            color: var(--dark-text-color);
+        }
+
+        .social-links a:hover {
+            color: var(--light-accent-blue);
+        }
+
+        body.dark-mode .social-links a:hover {
+            color: var(--dark-accent-blue);
+        }
+
+        /* Light/Dark Mode Toggle Switch Styling */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+        }
+
+        input:checked + .slider {
+            background-color: var(--light-accent-blue);
+        }
+
+        body.dark-mode input:checked + .slider {
+            background-color: var(--dark-accent-blue);
+        }
+
+        input:focus + .slider {
+            box-shadow: 0 0 1px #2196F3;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Rounded sliders */
+        .slider.round {
+            border-radius: 34px;
+        }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+        
+        body.dark-mode .theme-toggle-button {
+            color: var(--dark-text-color);
+        }
+
+        .theme-toggle-button:hover {
+            transform: scale(1.1);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                padding: 1rem 2%;
+            }
+
+            .nav-links {
+                margin-top: 1rem;
+                justify-content: center;
+            }
+
+            .nav-links li {
+                margin: 0 0.5rem;
+            }
+
+            .hero-section h1 {
+                font-size: 2.5rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+            }
+        }
+        
+        /* Smooth CSS Transitions for UI/UX polish */
+        * {
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        a, button, .cta-button {
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* About Us Section Styles */
+        .about-section {
+            padding: 6rem 5%;
+            text-align: left;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        body.dark-mode .about-section {
+            color: var(--dark-text-color);
+        }
+
+        .about-section h2 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: var(--light-text-color);
+        }
+
+        body.dark-mode .about-section h2 {
+            color: var(--dark-text-color);
+        }
+
+        .about-content {
+            margin-bottom: 4rem;
+        }
+
+        .mission-statement {
+            font-size: 1.2rem;
+            font-style: italic;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .description-text {
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .services-content {
+            margin-top: 4rem;
+        }
+
+        .services-heading {
+            font-size: 2rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--light-text-color);
+        }
+
+        body.dark-mode .services-heading {
+            color: var(--dark-text-color);
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        /* Service Card with Hover and Staggered Animations */
+        .service-card {
+            background-color: var(--light-nav-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: var(--light-box-shadow);
+            transition: transform 0.4s ease, box-shadow 0.4s ease, background-image 0.4s ease;
+            
+            /* Animation Properties */
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .service-card.animated {
+            animation: card-fade-in 0.8s forwards;
+        }
+
+        /* Staggered Delay for each card */
+        .service-card:nth-child(1) { animation-delay: 0.2s; }
+        .service-card:nth-child(2) { animation-delay: 0.4s; }
+        .service-card:nth-child(3) { animation-delay: 0.6s; }
+        .service-card:nth-child(4) { animation-delay: 0.8s; }
+        .service-card:nth-child(5) { animation-delay: 1.0s; }
+        .service-card:nth-child(6) { animation-delay: 1.2s; }
+        .service-card:nth-child(7) { animation-delay: 1.4s; }
+        .service-card:nth-child(8) { animation-delay: 1.6s; }
+        .service-card:nth-child(9) { animation-delay: 1.8s; }
+
+
+        body.dark-mode .service-card {
+            background-color: var(--dark-nav-bg);
+            box-shadow: var(--dark-box-shadow);
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(88, 77, 184, 0.37);
+            background-image: linear-gradient(135deg, rgba(0, 123, 255, 0.1), rgba(61, 7, 255, 0.315));
+        }
+
+        body.dark-mode .service-card:hover {
+            box-shadow: 0 10px 20px rgba(255, 255, 255, 0.05);
+            background-image: linear-gradient(135deg, rgba(41, 100, 158, 0.452), rgba(88, 59, 255, 0.397));
+        }
+
+        /* Keyframe Animation */
+        @keyframes card-fade-in {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Form Styling */
+        .registration-form-container {
+            max-width: 600px;
+            margin: 4rem auto;
+            padding: 2.5rem;
+            background-color: var(--light-nav-bg);
+            border-radius: 12px;
+            box-shadow: var(--light-box-shadow);
+            transition: background-color 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        body.dark-mode .registration-form-container {
+            background-color: var(--dark-nav-bg);
+            box-shadow: var(--dark-box-shadow);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: var(--light-text-color);
+        }
+        
+        body.dark-mode .form-group label {
+            color: var(--dark-text-color);
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            color: #333;
+            transition: border-color 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        body.dark-mode .form-group input,
+        body.dark-mode .form-group select {
+            background-color: #333;
+            border-color: #555;
+            color: #eee;
+        }
+        
+        .form-group input::placeholder {
+            color: #999;
+        }
+
+        body.dark-mode .form-group input::placeholder {
+            color: #aaa;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--light-accent-blue);
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+        }
+        
+        body.dark-mode .form-group input:focus,
+        body.dark-mode .form-group select:focus {
+            border-color: var(--dark-accent-blue);
+            box-shadow: 0 0 0 3px rgba(102, 178, 255, 0.25);
+        }
+        
+        .form-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+        
+        .form-buttons button {
+            padding: 0.75rem 2rem;
+            font-size: 1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .form-buttons .submit-btn {
+            background-color: var(--light-accent-blue);
+            color: white;
+        }
+        
+        .form-buttons .submit-btn:hover:not(:disabled) {
+            background-color: #0056b3;
+        }
+
+        body.dark-mode .form-buttons .submit-btn {
+            background-color: var(--dark-accent-blue);
+            color: black;
+        }
+        
+        body.dark-mode .form-buttons .submit-btn:hover:not(:disabled) {
+            background-color: #4da6ff;
+        }
+        
+        .form-buttons .reset-btn {
+            background-color: #ccc;
+            color: #333;
+        }
+        
+        .form-buttons .reset-btn:hover {
+            background-color: #bbb;
+        }
+        
+        body.dark-mode .form-buttons .reset-btn {
+            background-color: #555;
+            color: #eee;
+        }
+
+        .form-buttons .submit-btn:disabled {
+            background-color: #999;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        /* Thank You Message Styling */
+        .thank-you-container {
+            display: none; /* Initially hidden */
+            text-align: center;
+            padding: 4rem 2rem;
+            max-width: 600px;
+            margin: 4rem auto;
+            background-color: var(--light-nav-bg);
+            border-radius: 12px;
+            box-shadow: var(--light-box-shadow);
+            transition: background-color 0.4s ease, box-shadow 0.4s ease;
+            transform: scale(0.95);
+            opacity: 0;
+            animation: fadeInScale 0.5s forwards;
+        }
+        
+        body.dark-mode .thank-you-container {
+            background-color: var(--dark-nav-bg);
+            box-shadow: var(--dark-box-shadow);
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .thank-you-container h2 {
+            font-size: 2.5rem;
+            color: var(--light-accent-blue);
+            margin-bottom: 1rem;
+        }
+
+        body.dark-mode .thank-you-container h2 {
+            color: var(--dark-accent-blue);
+        }
+        
+        .thank-you-container p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: var(--light-text-color);
+            margin-bottom: 2rem;
+        }
+
+        body.dark-mode .thank-you-container p {
+            color: var(--dark-text-color);
+        }
+
+        .thank-you-container button {
+            padding: 0.75rem 2rem;
+            font-size: 1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: var(--light-accent-blue);
+            color: white;
+        }
+        
+        .thank-you-container button:hover {
+            background-color: #0056b3;
+        }
+        
+        body.dark-mode .thank-you-container button {
+            background-color: var(--dark-accent-blue);
+            color: black;
+        }
+        
+        body.dark-mode .thank-you-container button:hover {
+            background-color: #4da6ff;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="navbar">
+        <img src="/C:/Users/User/Downloads/Stratocumulus%20Logo.jpg" height="50" width="50">
+        <div class="nav-logo">
+            <a href="#home">STRATOCUMULUS</a>
+        </div>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="#home" target="_top">Home</a></li>
+                <li><a href="#about" target="_top">About Us</a></li>
+                <li><a href="#client-registration" target="_top">Customer Registration</a></li>
+                <li><a href="#contact" target="_top">Contact</a></li>
+                <li>
+                    <label class="switch">
+                        <input type="checkbox" id="theme-toggle-checkbox">
+                        <span class="slider round"></span>
+                    </label>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <center><img src="C:\Users\User\Downloads\Screenshot_20250501_174118.jpg" width="500" height="300"></center>
+        <section id="home" class="hero-section">
+            <h1>Architecting a conscious, inspired, and intelligent tomorrow</h1>
+            <div class="cta-buttons">
+                <a href="#client-registration" target="_top" class="cta-button primary">Register Client</a>
+                <a href="#about" target="_top" class="cta-button secondary">About Us</a>
+            </div>
+        </section>
+
+        <section id="about" class="about-section">
+            <div class="about">
+                <h2>About Stratocumulus</h2>
+                <p class="mission-statement">
+                    Stratocumulus is a forward-thinking, multi-disciplinary innovation collective committed to reshaping the future through collaborative intelligence, content creation, and transformative digital initiatives. This innovative organization was founded by <strong>Mr. Akarshan Bajpai</strong> on December 6, 2022. Positioned at the intersection of technology, creativity, and insight, Stratocumulus operates with a bold vision: to catalyze human potential and drive impact through storytelling, design, and scalable solutions.
+                </p>
+                <p class="description-text">
+                    We function as a next-gen workspace ecosystem, empowering programmers, creators, analysts, and strategists to converge on a single mission—to architect a more conscious, inspired, and intelligent tomorrow. Whether it's through high-impact media, insight-driven research, or future-ready digital tools, Stratocumulus is not just building content—we're building momentum.
+                </p>
+            </div>
+        
+            <div class="services-content">
+                <h3 class="services-heading">Our Services: Delivering Possibilities</h3>
+                <div class="services-grid">
+                    <div class="service-card">
+                        <h4>Education & Learning Technologies</h4>
+                        <p>Development of learning-centric Applications, Web Platforms, and Digital Content. Curated knowledge designed for impact, accessibility, and transformation.</p>
+                    </div>
+                    <div class="service-card">
+                        <h4>Consulting & Audit Services</h4>
+                        <p>Technology and Financial Consultancy with forward-facing strategies. Systematic audit frameworks to optimize performance, security, and compliance.</p>
+                    </div>
+                    <div class="service-card">
+                        <h4>Content Engineering</h4>
+                        <p>High-impact Content Creation across multimedia formats. Blending creativity with cognition to inform, inspire, and influence.</p>
+                    </div>
+                    <div class="service-card">
+                        <h4>Artificial Intelligence Solutions</h4>
+                        <p>Custom AI Tools built for insight, productivity, and automation. Research and prototyping in applied machine learning.</p>
+                    </div>
+                    <div class="service-card">
+                        <h4>Data Infrastructure & Platforms</h4>
+                        <p>Services for Data Collection, Storage, Management, and Visualization. Scalable solutions for data-driven decision-making.</p>
+                    </div>
+                    <div class="service-card">
+                        <h4>Edutainment & Interactive Experiences</h4>
+                        <p>Development of Entertaining yet Educative Games. Designed to spark curiosity while delivering structured knowledge.</p>
+                    </div>
+                    <div class="service-card">
+                        <h4>Cybersecurity Services</h4>
+                        <p>Implementation of Security Protocols, Risk Assessments, and Digital Protection Systems. Empowering safe digital environments for creators and users alike.</p>
+                    </div>
+                    <div class="service-card">
+                        <h4>Cloud & Networking Solutions</h4>
+                        <p>Cloud Platform Services: Deployment, monitoring, and scaling of cloud-based infrastructure. Networking Services: Building the connective fabric of digital ecosystems.</p>
+                    </div>
+                    <div class="service-card">
+                        <h4>Developer Enablement</h4>
+                        <p>Creation of intuitive and powerful Programming Tools. Optimized for creators, builders, and engineers of tomorrow.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="client-registration" style="min-height: 50vh; padding: 4rem 2rem; text-align: center;">
+            <div class="registration-form-container" id="client-registration">
+                <h2>Customer Registration</h2>
+                <form id="registrationForm" 
+                      action="https://script.google.com/macros/s/AKfycbyBL8mGo7QOobIyyM2UMV7mZVagFYw3GFmmT8_REhtzlmVDqjlaSxpwu9T5dss_9TjBUg/exec" 
+                      method="POST" 
+                      target="_self">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" placeholder="Enter your email address" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone</label>
+                        <input type="tel" id="phone" name="phone" placeholder="Enter your phone number">
+                    </div>
+                    <div class="form-group">
+                        <label for="organization">Organization</label>
+                        <input type="text" id="organization" name="organization" placeholder="Enter your organization's name">
+                    </div>
+                    <div class="form-group">
+                        <label for="interest">Area of Interest</label>
+                        <select id="interest" name="interest">
+                            <option value="" disabled selected>Select an area of interest</option>
+                            <option value="Education & Learning Technologies">Education & Learning Technologies</option>
+                            <option value="Consultancy and Audit Services">Consultancy and Audit Services</option>
+                            <option value="Content Engineering">Content Engineering</option>
+                            <option value="Artificial Intelligence Solutions">Artificial Intelligence Solutions</option>
+                            <option value="Data Infrastructure and Platforms">Data Infrastructure and Platforms</option>
+                            <option value="Edutainment and Interactive Experiences">Edutainment and Interactive Experiences</option>
+                            <option value="Cybersecurity Services">Cybersecurity Services</option>
+                            <option value="Cloud Networking Solutions">Cloud Networking Solutions</option>
+                            <option value="Developer Enablement">Developer Enablement</option>
+                        </select>
+                    </div>
+                    <div class="form-buttons">
+                        <button type="reset" class="reset-btn">Reset</button>
+                        <button type="submit" class="submit-btn" id="submitButton">Submit</button>
+                    </div>
+                </form>                
+            </div>
+            
+            <div class="thank-you-container" id="thank-you-container">
+                <h2>Thank You!</h2>
+                <p>Your registration has been submitted successfully. A new client ID has been created and we will be in touch with you shortly to discuss your needs.</p>
+                <button id="back-to-form-btn">Register Another Client</button>
+            </div>
+        </section>
+        
+        <section id="contact" class="contact-section">
+            <p>For all inquiries, please contact us at:</p>
+            <p><strong>[Official Stratocumulus Email Placeholder]</strong></p>
+            <p>Connect with us on social media:</p>
+            <ul class="social-links">
+                <li><a href="https://www.youtube.com/@Stratocumulus-j9a-1402">YouTube</a></li>
+                <li><a href="https://www.instagram.com/stratocumulus85/">Instagram</a></li>
+                <li><a href="https://stratocumulus85.blogspot.com/">Blogger</a></li>
+                <li><a href="https://github.com/stratocumulus85">GitHub</a></li>
+            </ul>
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeToggleCheckbox = document.getElementById('theme-toggle-checkbox');
+            const body = document.body;
+            const form = document.getElementById('registrationForm'); // Correct ID used
+            const formContainer = document.getElementById('form-container');
+            const thankYouContainer = document.getElementById('thank-you-container');
+            const backToFormBtn = document.getElementById('back-to-form-btn');
+            const submitButton = document.getElementById('submitButton');
+            // The URL is now taken directly from the form's action attribute
+            const googleAppsScriptURL = form.action; 
+
+            // --- Theme Toggle Logic ---
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                body.classList.add(savedTheme);
+                if (savedTheme === 'dark-mode') {
+                    themeToggleCheckbox.checked = true;
+                }
+            }
+
+            themeToggleCheckbox.addEventListener('change', () => {
+                body.classList.toggle('dark-mode');
+                if (body.classList.contains('dark-mode')) {
+                    localStorage.setItem('theme', 'dark-mode');
+                } else {
+                    localStorage.removeItem('theme');
+                }
+            });
+
+            // --- Service Card Animation Logic ---
+            const serviceCards = document.querySelectorAll('.service-card');
+            serviceCards.forEach(card => {
+                card.classList.add('animated');
+            });
+
+            // --- Form Submission Logic (AJAX replacement) ---
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault(); // Stop the default page redirect
+                
+                // Show Loading State
+                submitButton.disabled = true;
+                submitButton.textContent = 'Submitting...';
+
+                const formData = new FormData(form);
+                const data = new URLSearchParams(formData);
+
+                try {
+                    // Use fetch with the action URL
+                    const response = await fetch(googleAppsScriptURL, {
+                        method: 'POST',
+                        body: data,
+                        mode: 'no-cors' 
+                        // Note: 'no-cors' is necessary for Apps Script POST. 
+                        // It prevents reading the response content (like JSON), 
+                        // but allows the submission to complete successfully.
+                    });
+
+                    // We rely on the fetch succeeding (not throwing a network error) 
+                    // to assume the Apps Script ran correctly.
+                    
+                    // Delay for better UX (simulating server processing)
+                    await new Promise(r => setTimeout(r, 800)); 
+
+                    // Transition to Success View
+                    formContainer.style.display = 'none';
+                    thankYouContainer.style.display = 'block';
+
+                    // Scroll to the thank you section for visibility
+                    thankYouContainer.scrollIntoView({ behavior: 'smooth' });
+
+                    form.reset(); // Clear form fields
+                    
+
+                } catch (error) {
+                    console.error('Submission error (Network or CORS issue):', error);
+                    
+                    // Display an explicit error message
+                    formContainer.style.display = 'none';
+                    thankYouContainer.style.display = 'block';
+                    thankYouContainer.innerHTML = '<h2>Submission Failed</h2><p>An error occurred connecting to the server. Please check your network or try again later.</p><button id="back-to-form-btn-error">Back to Form</button>';
+
+                    // Set up event listener for the temporary error button
+                    document.getElementById('back-to-form-btn-error').addEventListener('click', () => {
+                        thankYouContainer.style.display = 'none';
+                        formContainer.style.display = 'block';
+                        thankYouContainer.innerHTML = '<h2>Thank You!</h2><p>Your registration has been submitted successfully. A new client ID has been created and we will be in touch with you shortly to discuss your needs.</p><button id="back-to-form-btn">Register Another Client</button>'; // Reset content
+                        document.getElementById('back-to-form-btn').addEventListener('click', backToFormHandler); // Re-attach standard listener
+                    });
+                    
+                } finally {
+                    // Reset button state
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Submit';
+                }
+            });
+
+            // Handler for the "Back to Form" button
+            const backToFormHandler = () => {
+                thankYouContainer.style.display = 'none';
+                formContainer.style.display = 'block';
+                formContainer.scrollIntoView({ behavior: 'smooth' });
+            };
+
+            // Attach the handler to the success button
+            backToFormBtn.addEventListener('click', backToFormHandler);
+            
+        });
+    </script>
+</body>
+</html>
+```eof
